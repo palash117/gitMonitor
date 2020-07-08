@@ -141,6 +141,5 @@ var checkForCommands = (message) => {
     }
   } else return false;
 };
-// listen();
 setInterval(listen, 1000 * 15);
 slimbot.startPolling();
