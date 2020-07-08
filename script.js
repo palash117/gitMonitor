@@ -3,6 +3,7 @@ const config = require("config");
 const User = require("./User");
 const request = require("request");
 const Store = require("./Store");
+const axios = require("axios");
 
 const slimbot = new Slimbot(config.get("id"));
 
@@ -71,40 +72,29 @@ const updateUser = async ({ userId, githubUserName, updateMsg }) => {
 };
 
 // listen to updates
-const listen = () => {
+const listen = async () => {
   for (userId in store.userIdMap) {
     let githubUserNames = store.listenerMap[userId];
     let user = store.userIdMap[userId];
     for (githubUserName of githubUserNames) {
       let lastEventId = store.githubUserLastEvent[githubUserName];
-
-      let options = {
-        uri: `https://api.github.com/users/${githubUserName}/events/public?client_id=${config.get(
+      let response = await axios.get(
+        `https://api.github.com/users/${githubUserName}/events/public?client_id=${config.get(
           "githubClientId"
         )}&client_secret=${config.get("githubClientSecret")}`,
-        method: "GET",
-        headers: { "user-agent": "node.js" },
-      };
-
-      request(
-        options,
-        (function (userName) {
-          return (error, response, body) => {
-            if (response.statusCode != 200) {
-              console.error(response);
-              console.log("error for user", githubUserName);
-            }
-            data = JSON.parse(body);
-            if (data && data.length > 0) {
-              let currentEventId = data[0].id;
-              if (lastEventId != currentEventId) {
-                prepareAndSendMessage(data[0], githubUserName, userId);
-                store.githubUserLastEvent[githubUserName] = currentEventId;
-              }
-            }
-          };
-        })(githubUserName)
+        {
+          headers: { "user-agent": "node.js" },
+        }
       );
+      // data = JSON.parse(data);
+      let data = response.data;
+      if (data && data.length > 0) {
+        let currentEventId = data[0].id;
+        if (lastEventId != currentEventId) {
+          prepareAndSendMessage(data[0], githubUserName, userId);
+          store.githubUserLastEvent[githubUserName] = currentEventId;
+        }
+      }
     }
   }
   store.save();
@@ -151,6 +141,6 @@ var checkForCommands = (message) => {
     }
   } else return false;
 };
-
-setInterval(listen, 1000 * 1);
+// listen();
+setInterval(listen, 1000 * 15);
 slimbot.startPolling();

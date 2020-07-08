@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/palash117/gitMonitor#readme",
   "dependencies": {
+    "axios": "^0.19.2",
     "config": "^3.3.1",
     "fs": "0.0.1-security",
     "request": "^2.88.2",
