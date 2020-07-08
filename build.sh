@@ -4,6 +4,7 @@ echo "MOVING TO FILESERVER CODE DIRECTORY\n"
 git pull
 echo "PULLING LATEST CODE CHANGES\n"
 
+
 docker kill gitMon
 docker container rm gitMon
 echo "KILLING LAST KNOWN FILESERVER CONTAINER\n"
