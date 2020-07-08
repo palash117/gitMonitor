@@ -15,7 +15,7 @@ class Store {
   retreive = () => {
     console.log("retreiving data");
     try {
-      let data = fs.readFileSync(process.env.STORAGE_ENV + "storage.json");
+      let data = fs.readFileSync(process.env.STORAGE_ENV + "/storage.json");
 
       if (data) {
         let store = JSON.parse(data);
