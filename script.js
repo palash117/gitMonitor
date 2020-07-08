@@ -101,8 +101,8 @@ const listen = () => {
         }
       });
     }
-    store.save();
   }
+  store.save();
 };
 
 var prepareAndSendMessage = async (payload, githubUserName, userId) => {
