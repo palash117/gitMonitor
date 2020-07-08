@@ -86,20 +86,25 @@ const listen = () => {
         headers: { "user-agent": "node.js" },
       };
 
-      request(options, (error, response, body) => {
-        if (response.statusCode != 200) {
-          console.error(response);
-          console.log("error for user", githubUserName);
-        }
-        data = JSON.parse(body);
-        if (data && data.length > 0) {
-          let currentEventId = data[0].id;
-          if (lastEventId != currentEventId) {
-            prepareAndSendMessage(data[0], githubUserName, userId);
-            store.githubUserLastEvent[githubUserName] = currentEventId;
-          }
-        }
-      });
+      request(
+        options,
+        (function (userName) {
+          return (error, response, body) => {
+            if (response.statusCode != 200) {
+              console.error(response);
+              console.log("error for user", githubUserName);
+            }
+            data = JSON.parse(body);
+            if (data && data.length > 0) {
+              let currentEventId = data[0].id;
+              if (lastEventId != currentEventId) {
+                prepareAndSendMessage(data[0], githubUserName, userId);
+                store.githubUserLastEvent[githubUserName] = currentEventId;
+              }
+            }
+          };
+        })(githubUserName)
+      );
     }
   }
   store.save();
@@ -147,5 +152,5 @@ var checkForCommands = (message) => {
   } else return false;
 };
 
-setInterval(listen, 1000 * 60 * 1);
+setInterval(listen, 1000 * 1);
 slimbot.startPolling();
