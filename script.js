@@ -7,6 +7,8 @@ const axios = require("axios");
 
 const slimbot = new Slimbot(config.get("id"));
 
+var pause = false;
+
 slimbot.on("message", (message) => {
   if (!checkForCommands(message)) {
     slimbot.sendMessage(message.chat.id, "hi, messageReceived");
@@ -24,6 +26,7 @@ const addNewListenerForUser = ({ githubUserName, userId, name, chatId }) => {
   if (!user) {
     user = new User({ name, userId, chatId });
     store.userList.push(user);
+    store.githubUserLastEvent[userId] = {};
     store.userIdMap[userId] = user;
   }
   let githubUserNames = store.listenerMap[user.userId];
@@ -33,6 +36,7 @@ const addNewListenerForUser = ({ githubUserName, userId, name, chatId }) => {
   }
   if (githubUserNames.indexOf(githubUserName) == -1) {
     githubUserNames.push(githubUserName);
+    store.githubUserLastEvent[userId][githubUserName] = null;
   }
   store.save();
 };
@@ -55,7 +59,7 @@ const removeListenerForUser = ({ githubUserName, userId }) => {
   store.listenerMap[userId] = githubUserNames.filter(
     (name) => name !== githubUserName
   );
-  store.githubUserLastEvent[githubUserName] = null;
+  store.githubUserLastEvent[userId][githubUserName] = null;
   store.save();
   return `you are not listening to git updates for ${githubUserName}`;
 };
@@ -73,11 +77,15 @@ const updateUser = async ({ userId, githubUserName, updateMsg }) => {
 
 // listen to updates
 const listen = async () => {
+  if (pause) {
+    return;
+  }
   for (userId in store.userIdMap) {
     let githubUserNames = store.listenerMap[userId];
     let user = store.userIdMap[userId];
     for (githubUserName of githubUserNames) {
-      let lastEventId = store.githubUserLastEvent[githubUserName];
+      let lastEventIdMap = store.githubUserLastEvent[userId];
+      let lastEventId = lastEventIdMap[githubUserName];
       let response = await axios.get(
         `https://api.github.com/users/${githubUserName}/events/public?client_id=${config.get(
           "githubClientId"
@@ -92,7 +100,7 @@ const listen = async () => {
         let currentEventId = data[0].id;
         if (lastEventId != currentEventId) {
           prepareAndSendMessage(data[0], githubUserName, userId);
-          store.githubUserLastEvent[githubUserName] = currentEventId;
+          store.githubUserLastEvent[userId][githubUserName] = currentEventId;
         }
       }
     }
@@ -135,6 +143,12 @@ var checkForCommands = (message) => {
           githubUserName: words[1],
           userId: message.from.id,
         });
+        return true;
+      case "pause":
+        pause = true;
+        return true;
+      case "unpause":
+        pause = false;
         return true;
       default:
         return false;
