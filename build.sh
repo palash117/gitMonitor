@@ -22,4 +22,4 @@ echo "$dockerImageId"
 
 echo "RUNNING DOCKER IMAGE IN HEADLESS MODE"
 
-docker -d run --name gitMon -v ~/keyConfig/gitMonConfig:/usr/src/app/config -v ~/keyConfig/gitMonStorage:/usr/src/app/storage ${dockerImageId}
+docker run -d  --name gitMon -v ~/keyConfig/gitMonConfig:/usr/src/app/config -v ~/keyConfig/gitMonStorage:/usr/src/app/storage ${dockerImageId}
