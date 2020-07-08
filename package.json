@@ -1,0 +1,26 @@
+{
+  "name": "gitMonitor",
+  "version": "1.0.0",
+  "description": "��#\u0000 \u0000g\u0000i\u0000t\u0000M\u0000o\u0000n\u0000i\u0000t\u0000o\u0000r\u0000\r\u0000 \u0000",
+  "main": "index.js",
+  "scripts": {
+    "run": "node script.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/palash117/gitMonitor.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/palash117/gitMonitor/issues"
+  },
+  "homepage": "https://github.com/palash117/gitMonitor#readme",
+  "dependencies": {
+    "config": "^3.3.1",
+    "fs": "0.0.1-security",
+    "request": "^2.88.2",
+    "slimbot": "^4.8.0"
+  }
+}
