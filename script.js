@@ -117,7 +117,7 @@ var prepareAndSendMessage = async (payload, githubUserName, userId) => {
       .map((c) => `\ncommit: ${c.message},`)
       .reduce((a, b) => a + b, "")}`;
   }
-  message = message + `\n on${formatDateFromIsoString(payload.created_at)}`;
+  message = message + `\n on ${formatDateFromIsoString(payload.created_at)}`;
   chatId = store.userIdMap[userId].chatId;
   console.log("prepared message: ", message);
   updateUser({ userId, githubUserName, updateMsg: message });
