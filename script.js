@@ -4,6 +4,7 @@ const User = require("./User");
 const request = require("request");
 const Store = require("./Store");
 const axios = require("axios");
+const formatDateFromIsoString = require("./utils/DateFormat");
 
 const slimbot = new Slimbot(config.get("id"));
 
@@ -116,7 +117,7 @@ var prepareAndSendMessage = async (payload, githubUserName, userId) => {
       .map((c) => `\ncommit: ${c.message},`)
       .reduce((a, b) => a + b, "")}`;
   }
-  message = message + `\n on${payload.created_at}`;
+  message = message + `\n on${formatDateFromIsoString(payload.created_at)}`;
   chatId = store.userIdMap[userId].chatId;
   console.log("prepared message: ", message);
   updateUser({ userId, githubUserName, updateMsg: message });
@@ -155,5 +156,6 @@ var checkForCommands = (message) => {
     }
   } else return false;
 };
+
 setInterval(listen, 1000 * 15);
 slimbot.startPolling();
