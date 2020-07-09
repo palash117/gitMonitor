@@ -3,6 +3,7 @@ const formatDateFromIsoString = (isoDateString) => {
     return "";
   }
   let date = new Date();
+  date = new Date(date.getTime() + Math.floor(1000 * 60 * 60 * 5.5));
   var curr_date = date.getDate();
 
   var curr_month = "" + (date.getMonth() + 1);
