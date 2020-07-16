@@ -103,6 +103,7 @@ const listen = async () => {
       // data = JSON.parse(data);
       if (response.status != 200) {
         console.log("unsuccessful response for", githubUserName);
+        continue;
       }
       let data = response.data;
       if (data && data.length > 0) {
