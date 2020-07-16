@@ -72,6 +72,11 @@ const updateUser = async ({ userId, githubUserName, updateMsg }) => {
     console.error(`user not found for ${userId}`);
     return;
   }
+
+  if (!updateMsg) {
+    console.log(updateMsg, user);
+  }
+
   chatId = user.chatId;
   slimbot.sendMessage(chatId, `hi ${user.name},${updateMsg}`);
 };
@@ -96,6 +101,9 @@ const listen = async () => {
         }
       );
       // data = JSON.parse(data);
+      if (response.status != 200) {
+        console.log("unsuccessful response for", githubUserName);
+      }
       let data = response.data;
       if (data && data.length > 0) {
         let currentEventId = data[0].id;
