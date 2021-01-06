@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/palash117/gitMonitor#readme",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "config": "^3.3.1",
     "fs": "0.0.1-security",
     "jest": "^26.1.0",
